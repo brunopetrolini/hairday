@@ -2,7 +2,7 @@
 
 @theme {
   /* Font Family */
-  --sans-font: "Catamaran", sans-serif;
+  --font-sans: "Catamaran", sans-serif;
 
   /* Colors */
   --color-*: initial;
