@@ -30,7 +30,7 @@ export function DatePicker({
         calendarStartDay={0}
         dateFormat="dd/MM/yyyy"
         locale={ptBR}
-        className="w-full h-12 text-gray-200 rounded-lg pl-12 pr-4 py-3 border border-gray-500 focus:border-yellow focus:outline-none cursor-pointer disabled:cursor-not-allowed"
+        className="h-12 w-full cursor-pointer rounded-lg border border-gray-500 py-3 pr-4 pl-12 text-gray-200 focus:border-yellow focus:outline-none disabled:cursor-not-allowed"
         wrapperClassName="w-full"
         calendarClassName="shadow-xl"
         popperClassName="datepicker-popper"
