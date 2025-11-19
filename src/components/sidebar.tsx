@@ -1,6 +1,7 @@
 import { UserSquareIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { DatePicker } from './ui/datepicker';
+import { Text } from './ui/text';
 
 export function Sidebar() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
@@ -9,18 +10,22 @@ export function Sidebar() {
     <aside className="m-3 w-full max-w-[498px] rounded-xl bg-gray-700 p-20">
       {/* Header */}
       <div className="flex flex-col gap-1">
-        <h1 className="font-bold text-2xl leading-6">Agende um atendimento</h1>
-        <p className="text-gray-300 text-sm leading-5">
+        <Text as="h1" variant="title-lg" className="text-gray-100">
+          Agende um atendimento
+        </Text>
+        <Text variant="text-sm" className="text-gray-300">
           Selecione data, horário e informe o nome do cliente para criar o
           agendamento
-        </p>
+        </Text>
       </div>
 
       {/* Content */}
       <div className="mt-6 flex flex-col gap-8">
         {/* Date Section */}
-        <div>
-          <span className="mb-2 block font-bold leading-6">Data</span>
+        <div className="flex flex-col gap-2">
+          <Text variant="title-md" className="text-gray-200">
+            Data
+          </Text>
           <DatePicker
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
