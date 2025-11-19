@@ -7,13 +7,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './datepicker-custom.css';
 
 interface DatePickerProps {
-  initialDate: Date | null;
+  selectedDate: Date | null;
   onDateSelect: (date: Date | null) => void;
   disabled?: boolean;
 }
 
 export function DatePicker({
-  initialDate,
+  selectedDate,
   onDateSelect,
   disabled,
 }: DatePickerProps) {
@@ -24,8 +24,9 @@ export function DatePicker({
         icon={
           <CalendarBlankIcon className="h-5 w-5 text-yellow" weight="bold" />
         }
+        minDate={new Date()}
+        selected={selectedDate}
         disabled={disabled}
-        selected={initialDate}
         onChange={onDateSelect}
         calendarStartDay={0}
         dateFormat="dd/MM/yyyy"

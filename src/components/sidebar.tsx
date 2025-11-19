@@ -22,7 +22,7 @@ export function Sidebar() {
         <div>
           <span className="mb-2 block font-bold leading-6">Data</span>
           <DatePicker
-            initialDate={selectedDate}
+            selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
           />
         </div>
@@ -142,7 +142,11 @@ export function Sidebar() {
           <span className="mb-2 block font-bold leading-6">Cliente</span>
           <div className="flex h-12 w-full cursor-text items-center justify-between gap-2 rounded-lg border border-gray-500 px-3 text-gray-200 transition-colors duration-150 focus-within:border-yellow">
             <UserSquareIcon className="h-5 w-5 text-yellow" weight="bold" />
-            <input type="text" className="flex-1 bg-transparent outline-none" />
+            <input
+              type="text"
+              className="flex-1 bg-transparent outline-none placeholder:text-gray-400"
+              placeholder="Nome do cliente"
+            />
           </div>
         </div>
 
