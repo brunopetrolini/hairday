@@ -1,16 +1,33 @@
-import {
-  CloudSunIcon,
-  MoonStarsIcon,
-  SunHorizonIcon,
-  TrashIcon,
-} from '@phosphor-icons/react';
 import { useState } from 'react';
+import {
+  type Appointment,
+  AppointmentListItems,
+} from './appointment-list-items';
 import { DatePicker } from './ui/datepicker';
-import { IconButton } from './ui/icon-button';
 import { Text } from './ui/text';
 
 export function Appointments() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+  const [appointments, setAppointments] = useState<Appointment[]>([
+    { id: '1', time: '09:00', clientName: 'Ryan Dorwart', turn: 'morning' },
+    { id: '2', time: '13:00', clientName: 'Livia Curtis', turn: 'afternoon' },
+    { id: '3', time: '14:00', clientName: 'Randy Calzoni', turn: 'afternoon' },
+    { id: '4', time: '16:00', clientName: 'Marley Franci', turn: 'afternoon' },
+    {
+      id: '5',
+      time: '18:00',
+      clientName: 'Jaylon Korsgaard',
+      turn: 'afternoon',
+    },
+    { id: '6', time: '21:00', clientName: 'Maria Herwitz', turn: 'night' },
+  ]);
+
+  function handleDeleteAppointment(id: string) {
+    setAppointments((state) =>
+      state.filter((appointment) => appointment.id !== id),
+    );
+  }
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-8 p-10 px-32 py-20">
@@ -34,112 +51,25 @@ export function Appointments() {
       {/* Content */}
       <div className="flex w-full max-w-[682px] flex-col gap-3">
         {/* Morning appointments */}
-        <div className="rounded-lg border border-gray-600">
-          <div className="flex flex-row items-center justify-between border-gray-600 border-b px-5 py-3">
-            <div className="flex flex-row items-center gap-3">
-              <SunHorizonIcon
-                className="h-5 w-5 text-yellow-dark"
-                weight="bold"
-              />
-              <Text variant="text-sm" className="text-gray-300">
-                Manhã
-              </Text>
-            </div>
-            <Text variant="text-sm" className="text-gray-300">
-              09h-12h
-            </Text>
-          </div>
-
-          <div className="flex flex-col items-center justify-between p-5">
-            <div className="flex h-8 w-full flex-row items-center justify-between gap-0.5">
-              <div className="flex flex-row items-center gap-5 text-gray-200">
-                <Text variant="title-md">11:00</Text>
-                <Text variant="text-md">Ryan Dorwart</Text>
-              </div>
-              <IconButton icon={TrashIcon} />
-            </div>
-          </div>
-        </div>
+        <AppointmentListItems
+          appointments={appointments}
+          onDeleteAppointment={handleDeleteAppointment}
+          turn="morning"
+        />
 
         {/* Afternoon appointments */}
-        <div className="rounded-lg border border-gray-600">
-          <div className="flex flex-row items-center justify-between border-gray-600 border-b px-5 py-3">
-            <div className="flex flex-row items-center gap-3">
-              <CloudSunIcon
-                className="h-5 w-5 text-yellow-dark"
-                weight="bold"
-              />
-              <Text variant="text-sm" className="text-gray-300">
-                Tarde
-              </Text>
-            </div>
-            <Text variant="text-sm" className="text-gray-300">
-              13h-18h
-            </Text>
-          </div>
-
-          <div className="flex flex-col items-center justify-between p-5">
-            <div className="flex h-8 w-full flex-row items-center justify-between gap-0.5">
-              <div className="flex flex-row items-center gap-5 text-gray-200">
-                <Text variant="title-md">13:00</Text>
-                <Text variant="text-md">Livia Curtis</Text>
-              </div>
-              <IconButton icon={TrashIcon} />
-            </div>
-
-            <div className="flex h-8 w-full flex-row items-center justify-between gap-0.5">
-              <div className="flex flex-row items-center gap-5 text-gray-200">
-                <Text variant="title-md">14:00</Text>
-                <Text variant="text-md">Randy Calzoni</Text>
-              </div>
-              <IconButton icon={TrashIcon} />
-            </div>
-
-            <div className="flex h-8 w-full flex-row items-center justify-between gap-0.5">
-              <div className="flex flex-row items-center gap-5 text-gray-200">
-                <Text variant="title-md">16:00</Text>
-                <Text variant="text-md">Marley Franci</Text>
-              </div>
-              <IconButton icon={TrashIcon} />
-            </div>
-
-            <div className="flex h-8 w-full flex-row items-center justify-between gap-0.5">
-              <div className="flex flex-row items-center gap-5 text-gray-200">
-                <Text variant="title-md">18:00</Text>
-                <Text variant="text-md">Jaylon Korsgaard</Text>
-              </div>
-              <IconButton icon={TrashIcon} />
-            </div>
-          </div>
-        </div>
+        <AppointmentListItems
+          appointments={appointments}
+          onDeleteAppointment={handleDeleteAppointment}
+          turn="afternoon"
+        />
 
         {/* Night appointments */}
-        <div className="rounded-lg border border-gray-600">
-          <div className="flex flex-row items-center justify-between border-gray-600 border-b px-5 py-3">
-            <div className="flex flex-row items-center gap-3">
-              <MoonStarsIcon
-                className="h-5 w-5 text-yellow-dark"
-                weight="bold"
-              />
-              <Text variant="text-sm" className="text-gray-300">
-                Noite
-              </Text>
-            </div>
-            <Text variant="text-sm" className="text-gray-300">
-              19h-21h
-            </Text>
-          </div>
-
-          <div className="flex flex-col items-center justify-between p-5">
-            <div className="flex h-8 w-full flex-row items-center justify-between gap-0.5">
-              <div className="flex flex-row items-center gap-5 text-gray-200">
-                <Text variant="title-md">21:00</Text>
-                <Text variant="text-md">Maria Herwitz</Text>
-              </div>
-              <IconButton icon={TrashIcon} />
-            </div>
-          </div>
-        </div>
+        <AppointmentListItems
+          appointments={appointments}
+          onDeleteAppointment={handleDeleteAppointment}
+          turn="night"
+        />
       </div>
     </main>
   );
