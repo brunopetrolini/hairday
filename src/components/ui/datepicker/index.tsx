@@ -16,12 +16,14 @@ interface DatePickerProps {
   selectedDate: Date | null;
   onDateSelect: (date: Date | null) => void;
   disabled?: boolean;
+  enableMinDate?: boolean;
 }
 
 export function DatePicker({
   selectedDate,
   onDateSelect,
   disabled,
+  enableMinDate,
 }: DatePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,7 +56,7 @@ export function DatePicker({
     <div className="custom-datepicker">
       <ReactDatePicker
         customInput={<CustomInput />}
-        minDate={new Date()}
+        minDate={enableMinDate ? new Date() : undefined}
         selected={selectedDate}
         disabled={disabled}
         onChange={onDateSelect}

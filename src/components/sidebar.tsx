@@ -63,6 +63,7 @@ export function Sidebar() {
           <DatePicker
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
+            enableMinDate
           />
         </div>
 
