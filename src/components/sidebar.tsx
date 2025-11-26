@@ -1,44 +1,86 @@
 import { UserSquareIcon } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useAppointments } from '../context/appointments-context';
 import { TimeSlot } from './time-slots';
 import { Button } from './ui/button';
 import { DatePicker } from './ui/datepicker';
 import { Text } from './ui/text';
 
-type Time = {
-  value: string;
-  disabled: boolean;
+const ALL_TIMES = {
+  morning: ['09:00', '10:00', '11:00'],
+  afternoon: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+  night: ['19:00', '20:00', '21:00'],
 };
 
+function formatDateToISO(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
+
 export function Sidebar() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [clientName, setClientName] = useState('');
 
-  const morningTimes: Time[] = [
-    { value: '09:00', disabled: false },
-    { value: '10:00', disabled: false },
-    { value: '11:00', disabled: true },
-    { value: '12:00', disabled: false },
-  ];
+  const { addAppointment, getBookedTimesByDate } = useAppointments();
 
-  const afternoonTimes: Time[] = [
-    { value: '13:00', disabled: true },
-    { value: '14:00', disabled: true },
-    { value: '15:00', disabled: true },
-    { value: '16:00', disabled: false },
-    { value: '17:00', disabled: true },
-    { value: '18:00', disabled: false },
-  ];
+  const bookedTimes = useMemo(() => {
+    return getBookedTimesByDate(formatDateToISO(selectedDate));
+  }, [selectedDate, getBookedTimesByDate]);
 
-  const nightTimes: Time[] = [
-    { value: '19:00', disabled: false },
-    { value: '20:00', disabled: false },
-    { value: '21:00', disabled: true },
-  ];
+  const morningTimes = useMemo(
+    () =>
+      ALL_TIMES.morning.map((time) => ({
+        value: time,
+        disabled: bookedTimes.includes(time),
+      })),
+    [bookedTimes],
+  );
+
+  const afternoonTimes = useMemo(
+    () =>
+      ALL_TIMES.afternoon.map((time) => ({
+        value: time,
+        disabled: bookedTimes.includes(time),
+      })),
+    [bookedTimes],
+  );
+
+  const nightTimes = useMemo(
+    () =>
+      ALL_TIMES.night.map((time) => ({
+        value: time,
+        disabled: bookedTimes.includes(time),
+      })),
+    [bookedTimes],
+  );
 
   function handleTimeSelect(time: string) {
     setSelectedTime((state) => (state === time ? null : time));
   }
+
+  function handleDateSelect(date: Date | null) {
+    if (date) {
+      setSelectedDate(date);
+      setSelectedTime(null);
+    }
+  }
+
+  function handleSubmit() {
+    if (!selectedTime || !clientName.trim()) {
+      return;
+    }
+
+    addAppointment({
+      date: formatDateToISO(selectedDate),
+      time: selectedTime,
+      clientName: clientName.trim(),
+    });
+
+    setSelectedTime(null);
+    setClientName('');
+  }
+
+  const isSubmitDisabled = !selectedTime || !clientName.trim();
 
   return (
     <aside className="m-3 w-full max-w-[498px] rounded-xl bg-gray-700 p-20">
@@ -62,7 +104,7 @@ export function Sidebar() {
           </Text>
           <DatePicker
             selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
+            onDateSelect={handleDateSelect}
             enableMinDate
           />
         </div>
@@ -105,11 +147,15 @@ export function Sidebar() {
               type="text"
               className="flex-1 bg-transparent outline-none placeholder:text-gray-400"
               placeholder="Nome do cliente"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
             />
           </div>
         </div>
 
-        <Button onClick={() => alert('AGENDAR')}>AGENDAR</Button>
+        <Button onClick={handleSubmit} disabled={isSubmitDisabled}>
+          AGENDAR
+        </Button>
       </div>
     </aside>
   );

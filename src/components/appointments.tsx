@@ -1,24 +1,20 @@
 import { useMemo, useState } from 'react';
-import { type Appointment, AppointmentList } from './appointment-list';
+import { useAppointments } from '../context/appointments-context';
+import { AppointmentList } from './appointment-list';
 import { DatePicker } from './ui/datepicker';
 import { Text } from './ui/text';
 
-export function Appointments() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+function formatDateToISO(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
 
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    { id: '1', time: '09:00', clientName: 'Ryan Dorwart', turn: 'morning' },
-    { id: '2', time: '13:00', clientName: 'Livia Curtis', turn: 'afternoon' },
-    { id: '3', time: '14:00', clientName: 'Randy Calzoni', turn: 'afternoon' },
-    { id: '4', time: '16:00', clientName: 'Marley Franci', turn: 'afternoon' },
-    {
-      id: '5',
-      time: '18:00',
-      clientName: 'Jaylon Korsgaard',
-      turn: 'afternoon',
-    },
-    { id: '6', time: '21:00', clientName: 'Maria Herwitz', turn: 'night' },
-  ]);
+export function Appointments() {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const { getAppointmentsByDate, removeAppointment } = useAppointments();
+
+  const appointments = useMemo(() => {
+    return getAppointmentsByDate(formatDateToISO(selectedDate));
+  }, [selectedDate, getAppointmentsByDate]);
 
   const morningAppointments = useMemo(
     () => appointments.filter((appointment) => appointment.turn === 'morning'),
@@ -37,9 +33,13 @@ export function Appointments() {
   );
 
   function handleDeleteAppointment(id: string) {
-    setAppointments((state) =>
-      state.filter((appointment) => appointment.id !== id),
-    );
+    removeAppointment(id);
+  }
+
+  function handleDateSelect(date: Date | null) {
+    if (date) {
+      setSelectedDate(date);
+    }
   }
 
   return (
@@ -57,7 +57,7 @@ export function Appointments() {
 
         <DatePicker
           selectedDate={selectedDate}
-          onDateSelect={setSelectedDate}
+          onDateSelect={handleDateSelect}
         />
       </div>
 
