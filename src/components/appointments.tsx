@@ -1,8 +1,5 @@
-import { useState } from 'react';
-import {
-  type Appointment,
-  AppointmentListItems,
-} from './appointment-list-items';
+import { useMemo, useState } from 'react';
+import { type Appointment, AppointmentList } from './appointment-list';
 import { DatePicker } from './ui/datepicker';
 import { Text } from './ui/text';
 
@@ -22,6 +19,22 @@ export function Appointments() {
     },
     { id: '6', time: '21:00', clientName: 'Maria Herwitz', turn: 'night' },
   ]);
+
+  const morningAppointments = useMemo(
+    () => appointments.filter((appointment) => appointment.turn === 'morning'),
+    [appointments],
+  );
+
+  const afternoonAppointments = useMemo(
+    () =>
+      appointments.filter((appointment) => appointment.turn === 'afternoon'),
+    [appointments],
+  );
+
+  const nightAppointments = useMemo(
+    () => appointments.filter((appointment) => appointment.turn === 'night'),
+    [appointments],
+  );
 
   function handleDeleteAppointment(id: string) {
     setAppointments((state) =>
@@ -51,25 +64,73 @@ export function Appointments() {
       {/* Content */}
       <div className="flex w-full max-w-[682px] flex-col gap-3">
         {/* Morning appointments */}
-        <AppointmentListItems
-          appointments={appointments}
-          onDeleteAppointment={handleDeleteAppointment}
-          turn="morning"
-        />
+        <AppointmentList.Container>
+          <AppointmentList.Header turn="morning" />
+          <AppointmentList.List>
+            {morningAppointments.length > 0 ? (
+              morningAppointments.map((appointment) => (
+                <AppointmentList.Item
+                  key={appointment.id}
+                  appointment={appointment}
+                  onDelete={() => handleDeleteAppointment(appointment.id)}
+                />
+              ))
+            ) : (
+              <Text
+                variant="text-sm"
+                className="w-full text-start text-gray-400"
+              >
+                Nenhum agendamento para esse período.
+              </Text>
+            )}
+          </AppointmentList.List>
+        </AppointmentList.Container>
 
         {/* Afternoon appointments */}
-        <AppointmentListItems
-          appointments={appointments}
-          onDeleteAppointment={handleDeleteAppointment}
-          turn="afternoon"
-        />
+        <AppointmentList.Container>
+          <AppointmentList.Header turn="afternoon" />
+          <AppointmentList.List>
+            {afternoonAppointments.length > 0 ? (
+              afternoonAppointments.map((appointment) => (
+                <AppointmentList.Item
+                  key={appointment.id}
+                  appointment={appointment}
+                  onDelete={() => handleDeleteAppointment(appointment.id)}
+                />
+              ))
+            ) : (
+              <Text
+                variant="text-sm"
+                className="w-full text-start text-gray-400"
+              >
+                Nenhum agendamento para esse período.
+              </Text>
+            )}
+          </AppointmentList.List>
+        </AppointmentList.Container>
 
         {/* Night appointments */}
-        <AppointmentListItems
-          appointments={appointments}
-          onDeleteAppointment={handleDeleteAppointment}
-          turn="night"
-        />
+        <AppointmentList.Container>
+          <AppointmentList.Header turn="night" />
+          <AppointmentList.List>
+            {nightAppointments.length > 0 ? (
+              nightAppointments.map((appointment) => (
+                <AppointmentList.Item
+                  key={appointment.id}
+                  appointment={appointment}
+                  onDelete={() => handleDeleteAppointment(appointment.id)}
+                />
+              ))
+            ) : (
+              <Text
+                variant="text-sm"
+                className="w-full text-start text-gray-400"
+              >
+                Nenhum agendamento para esse período.
+              </Text>
+            )}
+          </AppointmentList.List>
+        </AppointmentList.Container>
       </div>
     </main>
   );
